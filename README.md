@@ -3,7 +3,7 @@ blocksWorld_AgentJ
 
 Repository is a central location for KU Artificial Intelligence I project. Creating an intelligent agent for traversing Blocks World n.
 
-I. *createWorld_BW.py startup notes*
+I. createWorld_BW.py notes to Start
 
   +as of right now the following needs to be done to create BW. Right now it's kind of thrown together, but hopefully tommorow I will have the oppertunity work on the code and finish it up...so for now i'll explain as I go.
   
