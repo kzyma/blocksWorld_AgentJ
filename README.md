@@ -28,11 +28,12 @@ I. ................................createWorld_BW.py notes to Start.............
       
 II. ............................worldState_BW.py and AgentJBaseClass.py notes.............................
 
-  +these two classes contain things that I have been testing out for how we can build our application. i think it will be alot easier if we build a few classes to use with basic functionality build in. Agent and World_state are unfortunatly right now tightly coupled, so they must both be used, this is however, built from a design I was talking to Dr. R about after class today and something he recommended for the project:
+  +these two classes contain things that I have been testing out for how we can build our application. i think it will be alot easier if we build a few classes to use with basic functionality build in. Agent and World_state are unfortunatly right now tightly coupled, so they must both be used, this is however, built from a design I was talking to Dr. R about after class today and something he recommended for the project.
   
-    Basically worldSate_BW holds the current state of our Blocks World (what node agent is at, ect) and as you can see in the file will handle ALL talking to our database. To make it easier consider the following:
+  
+    +Basically worldSate_BW holds the current state of our Blocks World (what node agent is at, ect) and as you can see in the file will handle ALL talking to our database. To make it easier consider the following:
     
     1)our Agent wants to know where he is, so he must 'sense' where he is (ask the world for current location)
     2) our agent wants to move to a new state. He must do so by moving 'block by block' until reaching his (sorry erin or 'her') goal. 
     
-    Thus the only 2 things our block can do is 'see' where he is, and 'move' to an adjacent block. EVERY other action can be derived from these two 'senses'. So contained in the files are those two senses with an example at the bottom of AgentJBase.py under "unit tests" on how I used the classes. Next, I am going to work on another basic 'sense' for the agent, that is leaving something in blocks world, and searching a node for anything left there...woohoo
+    +Thus the only 2 things our block can do is 'see' where he is, and 'move' to an adjacent block. EVERY other action can be derived from these two 'senses'. So contained in the files are those two senses with an example at the bottom of AgentJBase.py under "unit tests" on how I used the classes. Next, I am going to work on another basic 'sense' for the agent, that is leaving something in blocks world, and searching a node for anything left there...woohoo
