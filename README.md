@@ -15,7 +15,7 @@ I. createWorld_BW.py notes to Start
   3) next you will need to print this by just typing:
       >>> n 
     
-  4) you will now get all of the nodes and relations that the python program created, the reason you need to do it this way for now is becuase i cannot figure out how to omit the brackets ,[ ], from a list..which I am working on. So now copy everythiing inside of these (omit brackets)..
+  4) you will now get all of the nodes and relations that the python program created, the reason you need to do it this way for now is becuase i cannot figure out how to omit the quotations,"", from a string..which I am working on. So now copy everythiing inside of these (omit string)..
   
     example to copy:
     node({'id': '1a2a'}), node({'id': '201a'}), node({'id': '102a'}), rel(0, 'MOVEzeroTOone', 1), rel(0, 'MOVEoneTOzero',     2), rel(2, 'MOVEzeroTOtable', 0), rel(1, 'MOVEzeroTOtable', 0)
