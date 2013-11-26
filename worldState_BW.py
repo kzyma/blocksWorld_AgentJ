@@ -9,7 +9,7 @@
 ##This file reports contains methods to report the current state of
 ##  blocks world.
 ###########################################################################
-
+#Nate was here
 
 from py2neo import node, rel
 from py2neo import neo4j
