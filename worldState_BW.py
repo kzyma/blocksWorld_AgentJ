@@ -19,7 +19,11 @@ import logging
 #uncomment for debug logging
 #logging.basicConfig(level=logging.DEBUG)
 
-graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+#graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+neo4j.authenticate("bwn.sb01.stations.graphenedb.com:24789",
+                   "BWn", "n6xcosUgxSWJBnM4lc94")
+
+graph_db = neo4j.GraphDatabaseService("http://bwn.sb01.stations.graphenedb.com:24789/db/data/")
 
 class worldStateMachine:
 
