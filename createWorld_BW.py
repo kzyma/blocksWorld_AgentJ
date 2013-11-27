@@ -27,6 +27,12 @@ import random
 
 graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
+#neo4j.authenticate("blocksworldv2.sb01.stations.graphenedb.com:24789",
+#                   "blocks_world_v2", "Ow5k0ESdykiT9vp05UXU")
+
+#graph_db = neo4j.GraphDatabaseService("http://blocksworldv2.sb01.stations.graphenedb.com:24789/db/data/")
+
+
 
 #generateRnadomConfig generates a random configuration
 #of the size of n and a set width.
@@ -226,7 +232,8 @@ def generateBW(n):
                         
         nodesAndRelsN2J = tempNodes + tempRels
                 
-        return str(nodesAndRelsN2J).strip('[]')
+        i= eval(str(nodesAndRelsN2J).strip('[]'))
+        graph_db.create(*i)
 
 
 # *NOTE* args = (arg1, arg2, arg3)
