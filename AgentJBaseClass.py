@@ -22,12 +22,8 @@ import logging
 #logging.basicConfig(level=logging.DEBUG)
 
 #get database / if you are not using a local server you
-<<<<<<< HEAD
-#will have to authenticate and change the location
-=======
 #will have to authenticate and change the location.
 #THE SAME MUST ALSO BE DONE IN WORLDSTATE_BW.py
->>>>>>> versionII
 graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
 
@@ -39,7 +35,6 @@ class AgentJBase:
     def __init__(self):
         #create an instance of state
         self.state = worldStateMachine()
-<<<<<<< HEAD
 
     ###############  sensory_getCurrentLocation  #################
     #return current location of Agent
@@ -47,15 +42,6 @@ class AgentJBase:
         return self.state.getLocation()
 
 
-=======
-
-    ###############  sensory_getCurrentLocation  #################
-    #return current location of Agent
-    def sensory_getCurrentLocation(self):
-        return self.state.getLocation()
-
-
->>>>>>> versionII
     ################ makeMov(getIndx,putIndx)  ###############
     #move Agent by:
     #        getIndx:  index of location you want to move top of stack
@@ -71,28 +57,6 @@ class AgentJBase:
         stp = self.convertNtoStr(str(putIndx))
         mv="MOVE"+srt+"TO"+stp
         self.state.moveByRelation(mv)
-<<<<<<< HEAD
-
-    ################ goToNodeById(nodeID)  #####################
-    # uses A star to calculate moves, and then loops until all
-    # of those moves are made, calling makeMove(x,x)
-    def goToNodeById(self,nodeID):
-        
-        init= self.reconstructCfg(self.state.getLocation())
-        goal= self.reconstructCfg(nodeID)
-        #note--HEURISTIC_LIST is in file AStarHeuristics.py
-        path = findPath(init,goal,HEURISTIC_LIST[2])
-        path = path[1:-1]
-        path = path.split(")(")
-        #make the moves, just dequeue from our path queue
-        for x in path:
-            if x!= '':
-                a=x.split(",")
-                indxGet=self.untranslateMv(a[0].strip(),self.reconstructCfg(self.state.getLocation()))
-                indxSet=self.untranslateMv(a[1].strip(),self.reconstructCfg(self.state.getLocation()))
-                self.makeMove(indxGet,indxSet)
-=======
->>>>>>> versionII
 
     ################ goToNodeById(nodeID)  #####################
     # uses A star to calculate moves, and then loops until all
@@ -120,15 +84,6 @@ class AgentJBase:
         self.goToNodeById(cfID)
         
 
-<<<<<<< HEAD
-    ################# goToNodeByConfig(cfg) ######################
-    def goToNodeByConfig(self,cfg):
-        cfID = self.genCfgId(cfg)
-        self.goToNodeById(cfID)
-        
-
-=======
->>>>>>> versionII
     ################# putDownFunction(property)  #################
     # function creates a new property on current node, which is
     # named function='value'
@@ -223,114 +178,3 @@ class AgentJBase:
         for n in nL:
                 cfId+=str(n)+'a'
         return cfId
-<<<<<<< HEAD
-
-####################### UNIT TEST ###############################
-# this is meant to test code and show how our objects could     #
-# possiblty interact to eventually create our main application  #
-#                                                               #
-
-from worldState_BW import *
-import unittest
-
-Agent = AgentJBase()
-
-print 'Current Starting Location of Agent is:'
-print Agent.sensory_getCurrentLocation()
-
-print 'Agent  MOVE (indx 1) TO (indx 2)'
-Agent.makeMove(1,2)
-print 'Agents current Location:'
-print Agent.sensory_getCurrentLocation()
-
-print 'go to node by id 1a2a3a'
-Agent.goToNodeById('1a2a3a')
-print 'Agents current Location:'
-print Agent.sensory_getCurrentLocation()
-
-print 'go to configuration [[1,3,2]]'
-cfg=[[1,3,2]]
-Agent.goToNodeByConfig(cfg)
-print Agent.sensory_getCurrentLocation()
-
-print 'go to configuration [[1],[2],[3]]'
-cfg=[[1],[2],[3]]
-Agent.goToNodeByConfig(cfg)
-print Agent.sensory_getCurrentLocation()
-
-print 'go to node by id "1a302a"'
-Agent.goToNodeById("1a302a")
-print Agent.sensory_getCurrentLocation()
-
-print 'go to configuration [[1,2,3]]'
-cfg=[[1,2,3]]
-Agent.goToNodeByConfig(cfg)
-print Agent.sensory_getCurrentLocation()
-
-print 'go to configuration [[1],[3,2]]'
-cfg=[[1],[3,2]]
-Agent.goToNodeByConfig(cfg)
-print Agent.sensory_getCurrentLocation()
-
-print 'go to configuration [[3],[1,2]]'
-cfg=[[3],[1,2]]
-Agent.goToNodeByConfig(cfg)
-print Agent.sensory_getCurrentLocation()
-
-print 'go to configuration [[1],[2],[3]]'
-cfg=[[1],[2],[3]]
-Agent.goToNodeByConfig(cfg)
-print Agent.sensory_getCurrentLocation()
-
-print 'put down object: TROPHY'
-Agent.putDownObject("Trophy")
-
-print 'now lets go back to config [[3],[1,2]]'
-cfg=[[3],[1,2]]
-Agent.goToNodeByConfig(cfg)
-print Agent.sensory_getCurrentLocation()
-
-print 'lets go back to our center node..[[1],[2],[3]]'
-cfg=[[1],[2],[3]]
-Agent.goToNodeByConfig(cfg)
-print Agent.sensory_getCurrentLocation()
-
-print 'is our object still here?'
-print Agent.peek("object")
-
-print 'yup, im gonna pick it up'
-print Agent.pickUp("object")
-
-print 'I picked it up....is it still in the world?'
-print Agent.peek("object")
-print 'Nope!'
-
-print 'Now lets try to put down, pick up, and evaluate a function'
-print 'put down 1+2'
-Agent.putDownFunction("1+2")
-print 'lets see if its there..'
-print Agent.peek("function")
-print 'sweet, now im going to pick it up, and evaluate it'
-holding = Agent.pickUp("function")
-print Agent.evaluateItem(holding)
-
-print 'creating global function i=(str(1+2+3))'
-i=((1+2+3))
-print 'place i in the world, take it out and evaluate'
-Agent.putDownFunction(i)
-holding = Agent.pickUp("function")
-print Agent.evaluateItem(holding)
-
-print 'lastly, lets see if our evaluate can make calls to move the agent elsewhere'
-print 'place moveToCfg [[3],[1,2]] on current location'
-i="Agent.goToNodeByConfig([[3],[1,2]])"
-Agent.putDownFunction(i)
-print 'pick up and evaluate'
-holding = Agent.pickUp("function")
-Agent.evaluateItem(holding)
-print 'and its magic...we are moved to the new location:'
-print Agent.sensory_getCurrentLocation()
-
-
-=======
->>>>>>> versionII
