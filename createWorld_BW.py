@@ -190,7 +190,7 @@ def generateBW(n):
         #-->>this is nessesary to do graph.db.create(nodesAndRelsN2J)
         #str(nodesAndRelsN2J)[1:-1]
         nodesAndRelsN2J = nodesN2J + relsN2J
-        return nodesAndRelsN2J
+        args = eval(nodesAndRelsN2J)
 
 # *NOTE* args = (arg1, arg2, arg3)
 #                func(*args)
