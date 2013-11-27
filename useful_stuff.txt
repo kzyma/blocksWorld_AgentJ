@@ -1,0 +1,4 @@
+CTRL+Z to exit python in windows.
+
+
+

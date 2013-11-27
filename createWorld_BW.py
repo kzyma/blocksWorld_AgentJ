@@ -25,7 +25,12 @@ import bisect
 import time
 import random
 
-graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+neo4j.authenticate("blocksworldv2.sb01.stations.graphenedb.com:24789",
+                   "blocks_world_v2", "Ow5k0ESdykiT9vp05UXU")
+
+graph_db = neo4j.GraphDatabaseService("http://blocksworldv2.sb01.stations.graphenedb.com:24789/db/data/")
+
+#graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
 
 #generateRnadomConfig generates a random configuration
@@ -157,7 +162,7 @@ def convertNtoStr(n):
 
 def findIndexById(nid,List):
         return List.index(nid)
-        
+
 #Generate the Blocks World
 #*note* all checking of which blocks were already created,ect is done
 #       in python (client side) to avoid a bunch of unnessesary http reqs.
@@ -229,11 +234,83 @@ def generateBW(n):
         return str(nodesAndRelsN2J).strip('[]')
 
 
+#Generate the Blocks World
+#*note* all checking of which blocks were already created,ect is done
+#       in python (client side) to avoid a bunch of unnessesary http reqs.
+def generateBW2(n):
+        
+        #list of New nodes that need to be expanded
+        NeedToXpndList = []
+        NeedToXpndListID = []
+        #list of nodes that were expanded
+        DoneXpndList = []
+        #list of all nodes created and parrell indx'd node list for Neo2J
+        nodesID = []
+        nodesAndRelsN2J = []
+        Nodes=[]
+        nodesN2J = []
+        relsN2J = []
+        
+        #generate central node/initial node
+        CntCfg = generateCenterNode(n)
+        CntNode = makNd(CntCfg,None,None)
+        nodesID.append(CntNode['nid'])
+        nodesN2J.append(node(id=CntNode["nid"]))
+        NeedToXpndList.append(CntNode)
+        NeedToXpndListID.append(CntNode['nid'])
+        
+        
+        #until all nodes that need to be expanded are expanded, continue...
+        while([] != (NeedToXpndListID)):
+                
+                DoneXpndList.append(NeedToXpndListID.pop())
+                xpndNode = xpdNd(NeedToXpndList.pop())
+                
+                for x in xpndNode:
+                        if (x['nid'] not in nodesID):
+                                NeedToXpndList.append(x)
+                                NeedToXpndListID.append(x['nid'])
+                                nodesID.append(x['nid'])
+                                nodesN2J.append(node(id=x["nid"]))
+                        temp= xpdNd(x)
+                        for y in temp:
+                                Nodes.append(y)
+
+        tempNodes = []
+        for i in nodesN2J:
+                if i not in tempNodes:
+                        tempNodes.append(i)
+        nodesN2J=tempNodes
+                
+        for x in Nodes:
+                #create relationship string for mv
+                temp= x["mv"]
+                move="MOVE"+convertNtoStr(str(temp[0]))+"TO"+convertNtoStr(str(temp[1]))
+                #create the relationship
+                indxOfRoot = findIndexById(x["root"],nodesID)
+                indxOfCurrent = findIndexById(x["nid"],nodesID)
+                #append relation to nodesAndRels
+                relsN2J.append(rel(indxOfRoot,move,indxOfCurrent))
+                
+        #convert to string and remove first and last element (the " and ")
+        #-->>this is nessesary to do graph.db.create(nodesAndRelsN2J)
+        #str(nodesAndRelsN2J)[1:-1]
+        tempRels = []
+        for i in relsN2J:
+                if i not in tempRels:
+                        tempRels.append(i)
+                        
+        nodesAndRelsN2J = tempNodes + tempRels
+                
+        return nodesAndRelsN2J
+
+
 # *NOTE* args = (arg1, arg2, arg3)
 #                func(*args)
 
-        
-
-
+def createADB(n):
+    i = generateBW2(n)
+    graph_db.create(*i)
+    print("Created")
 
 
