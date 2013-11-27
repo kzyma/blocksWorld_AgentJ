@@ -22,7 +22,12 @@ import logging
 #logging.basicConfig(level=logging.DEBUG)
 
 #get database / if you are not using a local server you
+<<<<<<< HEAD
 #will have to authenticate and change the location
+=======
+#will have to authenticate and change the location.
+#THE SAME MUST ALSO BE DONE IN WORLDSTATE_BW.py
+>>>>>>> versionII
 graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
 
@@ -34,6 +39,7 @@ class AgentJBase:
     def __init__(self):
         #create an instance of state
         self.state = worldStateMachine()
+<<<<<<< HEAD
 
     ###############  sensory_getCurrentLocation  #################
     #return current location of Agent
@@ -41,6 +47,15 @@ class AgentJBase:
         return self.state.getLocation()
 
 
+=======
+
+    ###############  sensory_getCurrentLocation  #################
+    #return current location of Agent
+    def sensory_getCurrentLocation(self):
+        return self.state.getLocation()
+
+
+>>>>>>> versionII
     ################ makeMov(getIndx,putIndx)  ###############
     #move Agent by:
     #        getIndx:  index of location you want to move top of stack
@@ -56,6 +71,28 @@ class AgentJBase:
         stp = self.convertNtoStr(str(putIndx))
         mv="MOVE"+srt+"TO"+stp
         self.state.moveByRelation(mv)
+<<<<<<< HEAD
+
+    ################ goToNodeById(nodeID)  #####################
+    # uses A star to calculate moves, and then loops until all
+    # of those moves are made, calling makeMove(x,x)
+    def goToNodeById(self,nodeID):
+        
+        init= self.reconstructCfg(self.state.getLocation())
+        goal= self.reconstructCfg(nodeID)
+        #note--HEURISTIC_LIST is in file AStarHeuristics.py
+        path = findPath(init,goal,HEURISTIC_LIST[2])
+        path = path[1:-1]
+        path = path.split(")(")
+        #make the moves, just dequeue from our path queue
+        for x in path:
+            if x!= '':
+                a=x.split(",")
+                indxGet=self.untranslateMv(a[0].strip(),self.reconstructCfg(self.state.getLocation()))
+                indxSet=self.untranslateMv(a[1].strip(),self.reconstructCfg(self.state.getLocation()))
+                self.makeMove(indxGet,indxSet)
+=======
+>>>>>>> versionII
 
     ################ goToNodeById(nodeID)  #####################
     # uses A star to calculate moves, and then loops until all
@@ -83,6 +120,15 @@ class AgentJBase:
         self.goToNodeById(cfID)
         
 
+<<<<<<< HEAD
+    ################# goToNodeByConfig(cfg) ######################
+    def goToNodeByConfig(self,cfg):
+        cfID = self.genCfgId(cfg)
+        self.goToNodeById(cfID)
+        
+
+=======
+>>>>>>> versionII
     ################# putDownFunction(property)  #################
     # function creates a new property on current node, which is
     # named function='value'
@@ -177,6 +223,7 @@ class AgentJBase:
         for n in nL:
                 cfId+=str(n)+'a'
         return cfId
+<<<<<<< HEAD
 
 ####################### UNIT TEST ###############################
 # this is meant to test code and show how our objects could     #
@@ -285,3 +332,5 @@ print 'and its magic...we are moved to the new location:'
 print Agent.sensory_getCurrentLocation()
 
 
+=======
+>>>>>>> versionII
