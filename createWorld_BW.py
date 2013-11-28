@@ -225,10 +225,6 @@ def generateBW(n):
         #convert to string and remove first and last element (the " and ")
         #-->>this is nessesary to do graph.db.create(nodesAndRelsN2J)
         #str(nodesAndRelsN2J)[1:-1]
-<<<<<<< HEAD
-        nodesAndRelsN2J = nodesN2J + relsN2J
-        args = eval(nodesAndRelsN2J)
-=======
         tempRels = []
         for i in relsN2J:
                 if i not in tempRels:
@@ -239,12 +235,6 @@ def generateBW(n):
         i= eval(str(nodesAndRelsN2J).strip('[]'))
         graph_db.create(*i)
 
->>>>>>> versionII
-
-# *NOTE* args = (arg1, arg2, arg3)
-#                func(*args)
-
-        
 
 
 

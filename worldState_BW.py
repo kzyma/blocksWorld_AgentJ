@@ -21,6 +21,14 @@ import logging
 
 graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
+#comment out display for final product, will be overriden
+#right now this feature only has support for one Agent, if
+#we want to add more, each message should be unique to allow
+#client to know which agent moves where..
+# ex, "Agent 1 is at location '1a203a'.
+def displayWorld(message):
+    print message
+
 class worldStateMachine:
 
     #current world State data
@@ -34,12 +42,18 @@ class worldStateMachine:
         for record in query.stream():
             currentNode = record[0]
         self.node = currentNode
-        self.location =  str(currentNode["id"])
+        self.setLocation(str(currentNode["id"]))
 
     #################  getLocation()  ########################
     #return the current state location
     def getLocation(self):
         return self.location
+
+    #################  setLocation() #########################
+    #set current state location
+    def setLocation(self,location):
+        self.location = location
+        displayWorld('----------->>>>>>>>>>Agent is at location: '+self.location)
 
     #################  getNode()  ############################
     #return current state node
@@ -62,7 +76,7 @@ class worldStateMachine:
         for record in query.stream():
             returnedNode = record[0]
         self.node = returnedNode
-        self.location =  str(self.node["id"])
+        self.setLocation(str(self.node["id"]))
 
     #################  addPropertyToLocation(prop,value)  ########
     #function will add property to current location node
@@ -95,22 +109,3 @@ class worldStateMachine:
         for record in query.stream():
             returnValue = record[0]
         return returnValue
-
-
-
-
-#devloper notes:
-#Nov. 21st:
-#   moveByRelation works nicely when the move
-#   is possible, but throws a nasty, application breaking
-#   exception when you try a move that does not exist, need to find
-#   a better way to handle, maby with a try-catch block, where the exception
-#   can be handled by calling function instead of blasting up to __main()__
-#
-#Nov. 22nd:
-#   right now every function calls sef.node = returned node to keep this current
-#   for printing, the correct way to do this is to @override print for this obeject
-#   and query the database everytime a print is done to print current, this will save
-#   on issues down the road if we add a second Agent, ect.
-
-
