@@ -2,9 +2,9 @@ from AgentJBaseClass import *
 #GUI Packages-- Tkinker
 from Tkinter import *
 import Tkinter
+
    
 class App(Tkinter.Tk):
-
 
     def __init__(self,master):
         #*note*- pack_propagate(0) used to change default behavior of
@@ -33,12 +33,16 @@ class App(Tkinter.Tk):
         paneAgent.pack(side=LEFT,fill=BOTH, expand=1,padx=10, pady=10)
         paneAgent.pack_propagate(0)
 
+        global worldMessage
+        global agentMessage
+        worldMessage = Tkinter.StringVar()
+        agentMessage = Tkinter.StringVar()
         #add text box's to Agent output and World Output
-        w_entry = Message(paneWorld,width=400,anchor=NW,text="hello world")
-        a_entry = Message(paneAgent,width=400,anchor=NW,text="Agent here, chello")
+        self.w_out = Message(paneWorld,textvariable=worldMessage,width=400,anchor=NW)
+        self.a_out = Message(paneAgent,textvariable=agentMessage,width=400,anchor=NW)
 
-        w_entry.pack(fill=BOTH, expand=1)
-        a_entry.pack(fill=BOTH, expand=1)
+        self.w_out.pack(fill=BOTH, expand=1)
+        self.a_out.pack(fill=BOTH, expand=1)
 
         #paneIn sub-panes/buttons/ect
         self.entry = Entry(paneIn,width=70)
@@ -54,16 +58,25 @@ class App(Tkinter.Tk):
     #called when enter button is clicked
     def onEnter(self):
         #get text from entry box, and eat CR
+        global agentMessage
         i = self.entry.get()
-        print eval(i)
+        display =  eval(i)
+        agentMessage.set(display)
+
 
 ######################## MAIN ##########################
 
 if __name__ == "__main__":
     app = App(None)
     app.title('Agent in Blocks World')
-
+    
     #initialize Agent and blocksWorld
     Agent = AgentJBase()
-    
+
     app.mainloop()
+
+
+
+
+
+    

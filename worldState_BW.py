@@ -15,19 +15,13 @@ from py2neo import node, rel
 from py2neo import neo4j
 from py2neo import cypher
 import logging
+from GUIApp import *
 
 #uncomment for debug logging
 #logging.basicConfig(level=logging.DEBUG)
 
 graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
-#comment out display for final product, will be overriden
-#right now this feature only has support for one Agent, if
-#we want to add more, each message should be unique to allow
-#client to know which agent moves where..
-# ex, "Agent 1 is at location '1a203a'.
-def displayWorld(message):
-    print message
 
 class worldStateMachine:
 
@@ -53,7 +47,6 @@ class worldStateMachine:
     #set current state location
     def setLocation(self,location):
         self.location = location
-        displayWorld('----------->>>>>>>>>>Agent is at location: '+self.location)
 
     #################  getNode()  ############################
     #return current state node

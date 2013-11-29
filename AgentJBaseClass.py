@@ -17,6 +17,7 @@ from py2neo import neo4j
 from AStarFunctions import*
 from worldState_BW import *
 import logging
+from GUIApp import *
 
 #uncomment for debug logging
 #logging.basicConfig(level=logging.DEBUG)
