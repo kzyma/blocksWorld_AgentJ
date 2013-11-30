@@ -9,23 +9,26 @@
 ##
 ##This file contains low level basic functionality for agent in blocks world
 ##  implemented through neo4j
-##
+##Edited By: Erin Fowler Nov 27, 2013
 ###########################################################################
 
 from py2neo import node, rel
 from py2neo import neo4j
-from AStarFunctions import*
+import time
+import random
+import AgtJUtilityClass
+import createWorld_BW
+from AStarFunctions import *
 from worldState_BW import *
 import logging
-from GUIApp import *
 
 #uncomment for debug logging
 #logging.basicConfig(level=logging.DEBUG)
 
-#get database / if you are not using a local server you
-#will have to authenticate and change the location.
-#THE SAME MUST ALSO BE DONE IN WORLDSTATE_BW.py
-graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+neo4j.authenticate("bw3.sb01.stations.graphenedb.com:24789",
+                   "Bw3", "rPNUx8yavz6tFsY2sgUv")
+
+graph_db = neo4j.GraphDatabaseService("http://bw3.sb01.stations.graphenedb.com:24789/db/data/")
 
 
 class AgentJBase:
@@ -51,11 +54,11 @@ class AgentJBase:
         
         #Translate the index that number is at
         #first build configuration from currentlocation ID
-        cfg= self.reconstructCfg(self.state.getLocation())
+        cfg= AgtJUtilityClass.reconstructCfg(self.state.getLocation())
         #then find index of that number to pass to move function
         
-        srt = self.convertNtoStr(str(getIndx))
-        stp = self.convertNtoStr(str(putIndx))
+        srt = AgtJUtilityClass.convertNtoStr(str(getIndx))
+        stp = AgtJUtilityClass.convertNtoStr(str(putIndx))
         mv="MOVE"+srt+"TO"+stp
         self.state.moveByRelation(mv)
 
@@ -64,8 +67,8 @@ class AgentJBase:
     # of those moves are made, calling makeMove(x,x)
     def goToNodeById(self,nodeID):
         
-        init= self.reconstructCfg(self.state.getLocation())
-        goal= self.reconstructCfg(nodeID)
+        init= AgtJUtilityClass.reconstructCfg(self.state.getLocation())
+        goal= AgtJUtilityClass.reconstructCfg(nodeID)
         #note--HEURISTIC_LIST is in file AStarHeuristics.py
         path = findPath(init,goal,HEURISTIC_LIST[2])
         path = path[1:-1]
@@ -74,28 +77,28 @@ class AgentJBase:
         for x in path:
             if x!= '':
                 a=x.split(",")
-                indxGet=self.untranslateMv(a[0].strip(),self.reconstructCfg(self.state.getLocation()))
-                indxSet=self.untranslateMv(a[1].strip(),self.reconstructCfg(self.state.getLocation()))
+                indxGet=AgtJUtilityClass.untranslateMv(a[0].strip(),AgtJUtilityClass.reconstructCfg(self.state.getLocation()))
+                indxSet=AgtJUtilityClass.untranslateMv(a[1].strip(),AgtJUtilityClass.reconstructCfg(self.state.getLocation()))
                 self.makeMove(indxGet,indxSet)
 
 
     ################# goToNodeByConfig(cfg) ######################
     def goToNodeByConfig(self,cfg):
-        cfID = self.genCfgId(cfg)
+        cfID = createWorld_BW.genCfgId(cfg)
         self.goToNodeById(cfID)
         
 
     ################# putDownFunction(property)  #################
-    # function creates a new property on current node, which is
-    # named function='value'
+    # creates a new key "function", and function value for current node
     def putDownFunction(self,value):
+        #note: 'function' is the key, value is the value for that key
         self.state.addPropertyToLocation('function',value)
 
 
     ################# putDownObject(property)  ####################
     # function creates a new property on current node, which is
-    # named Object='value'
     def putDownObject(self,value):
+        #note: 'object' is a key in node, value is value for that key
         self.state.addPropertyToLocation('object',value)
 
     ################# pickUp(property,state)  #####################
@@ -123,59 +126,82 @@ class AgentJBase:
     def evaluateItem(self,item):
         return eval(item)
 
-#################### Non-Member Functions #############################
+    #****************searchBWforProp()*******************************
+    #Action:  will search blocks world nodes for objects
+    #Returns: nothing, but can be made to return an object
+    #****************************************************************
+    def searchBWforObj(self):
+       #check if agent is at central node
+        central = '1a2a3a'
+        cur = self.sensory_getCurrentLocation()
+        print 'current',cur
+        #if not already at central, get there
+        if central != cur:
+            self.goToNodeById(central)
+        thing = self.peek('object')
+        print 'object', thing
+        #if thing isn't empty
+        if thing != None:
+            this = self.pickUp('object')
+            print 'I have', this, '.  Awe-SOME!'
+            #NOTE: answer should be in the form of a node id or the sack functions
+            answer = raw_input('Where do you want me to put it? ')
+            print 'OK.  Going to:', answer
+            destination = self.goToNodeById(answer)
+            where = self.sensory_getCurrentLocation()
+            print 'I am here now.', where
+            self.putDownObject(this)
+            verify = self.peek('object')
+            print 'I put it here in ',where, verify
+
+        return
+
+    #*****************searchBW()***********************************
+    #Actions:  will move freely searching through BWn
+    #Returns:  list of collected objects
+    #**************************************************************
+    def searchBW(self, genSeed=0):
+        random.seed(genSeed)
+        #list for objects
+        objList =[]
+        #check if agent is at central node
+        #central = '1a2a3a'
+        cur = self.sensory_getCurrentLocation()
+        print 'current',cur
+        thing = self.peek('object')
+        print 'object', thing
+        #if thing isn't none
+        #while thing != None:
+            #put it in the list
+            #objList.append(thing)
+            #print 'list', objList
+            #keep looking for objects
+            #curCfg = createWorld_BW.reconstructCfg(cur)
+            #moves = createWorld_BW.genMvs(curCfg)
+            #print 'moves', moves
+            #get random index of move from list of moves
+            #rIndex= random.randrange(len(moves))
+            #print 'rIndex', rIndex
+            #nxtCfg = createWorld_BW.mkNwCfg(moves[rIndex],curCfg)
+            #print 'nxtCfg',nxtCfg
+            #nxt=self.goToNodeByConfig(nxtCfg)
+            #whr = self.sensory_getCurrentLocation()
+            #print whr
+        while thing == None:
+            #keep looking for objects
+            curCfg = createWorld_BW.reconstructCfg(cur)
+            moves = createWorld_BW.genMvs(curCfg)
+            print 'moves', moves
+            #get random index of move from list of moves
+            rIndex= random.randrange(len(moves))
+            print 'rIndex', rIndex
+            nxtCfg = createWorld_BW.mkNwCfg(moves[rIndex],curCfg)
+            print 'nxtCfg',nxtCfg
+            nxt=self.goToNodeByConfig(nxtCfg)
+            whr = self.sensory_getCurrentLocation()
+            print whr
+
         
-    def convertNtoStr(self,n):
-            return {
-            '1': "one",
-            '2': "two",
-            '3': "three",
-            '4': "four",
-            '5': "five",
-            '6': "six",
-            '7': "seven",
-            '8': "eight",
-            '9': "nine",
-            '0': "zero",
-            '-1': "table",
-            }.get(n,"none") 
+        return objList 
+        
 
-    #re-build the BW cfg from it's id
-    def reconstructCfg(self,nodeID):
-        cfg=[]
-        i=1
-        while i<len(nodeID):
-            current=nodeID[(i-1):i]
-            temp=[]
-            while current!='a':
-                if (current != '0'):
-                    temp.append(int(current))
-                i = i+1
-                current=nodeID[(i-1):i]
-            cfg.append(temp)
-            i = i+1
-        return cfg
-
-    def untranslateMv(self,a,node):
-        #take care of special case--table
-        if (a=="-1"):
-            return -1
-        #all other cases
-        for i in node:
-            if int(a) in i:
-                return node.index(i)
-
-    def numbize(self,nList):
-        num=0
-        for n in nList:
-                num*=100
-                num+=n
-        return num
-
-    def genCfgId(self,cfg):
-        nL=map(self.numbize,cfg)
-        nL.sort()
-        cfId=''
-        for n in nL:
-                cfId+=str(n)+'a'
-        return cfId
