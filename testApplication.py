@@ -88,6 +88,7 @@ Agent.putDownFunction("1+2")
 print 'lets see if its there..'
 print Agent.peek("function")
 print 'sweet, now im going to pick it up, and evaluate it'
+
 holding = Agent.pickUp("function")
 print Agent.evaluateItem(holding)
 
@@ -97,4 +98,21 @@ print 'place i in the world, take it out and evaluate'
 Agent.putDownFunction(i)
 holding = Agent.pickUp("function")
 print Agent.evaluateItem(holding)
+
+#************************ErinTestCode*******************************
+
+print 'Current Starting Location of Agent is:'
+print Agent.sensory_getCurrentLocation()
+
+print 'Agent  MOVE (indx 1) TO (indx 2)'
+Agent.makeMove(1,2)
+print 'Agents current Location:'
+print Agent.sensory_getCurrentLocation()
+
+print 'GONNA SEARCH FOR STUFF'
+Agent.searchBWforObj()
+
+print 'random search for stuff'
+items = Agent.searchBW(5)
+print 'Stuff I found:' , items
 
