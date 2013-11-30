@@ -10,7 +10,7 @@
 ###########################################################################
 
 #******************************convertNtoStr()**************************
-#Actions:       takes n and converts to string
+#Actions:       takes n and finds its equivalent in the dictionary
 #Return:	returns dictionary
 #********************************************************************
 def convertNtoStr(n):
