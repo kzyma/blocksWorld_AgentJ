@@ -9,10 +9,7 @@
 ##      
 ##This file contains low level basic functionality for agent in blocks world
 ##  implemented through neo4j
-<<<<<<< HEAD
 ##
-=======
->>>>>>> 3cfc162332e14ff23593dc176000cf9190a236b4
 ##Edited By: Erin Fowler Nov 27, 2013
 ###########################################################################
 
@@ -33,15 +30,13 @@ import logging
 #uncomment for debug logging
 #logging.basicConfig(level=logging.DEBUG)
 
-neo4j.authenticate("bw3.sb01.stations.graphenedb.com:24789",
-                   "Bw3", "rPNUx8yavz6tFsY2sgUv")
-
-graph_db = neo4j.GraphDatabaseService("http://bw3.sb01.stations.graphenedb.com:24789/db/data/")
-
 #neo4j.authenticate("bw3.sb01.stations.graphenedb.com:24789",
-                  # "Bw3", "rPNUx8yavz6tFsY2sgUv")
+#                   "Bw3", "rPNUx8yavz6tFsY2sgUv")
 
 #graph_db = neo4j.GraphDatabaseService("http://bw3.sb01.stations.graphenedb.com:24789/db/data/")
+
+
+graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
 
 class AgentJBase():
@@ -332,7 +327,6 @@ class AgentJBase():
                    'I can search this node, just say the magic words. '] 
         return choice(replies)
 
-<<<<<<< HEAD
 #################### Non-Member Functions ##################################
         
     def convertNtoStr(self,n):
@@ -397,84 +391,5 @@ class AgentJBase():
             n.append(x)
             i.append(n)
         return i
-=======
-    #****************searchBWforProp()*******************************
-    #Action:  will search blocks world nodes for objects
-    #Returns: nothing, but can be made to return an object
-    #****************************************************************
-    def searchBWforObj(self):
-       #check if agent is at central node
-        central = '1a2a3a'
-        cur = self.sensory_getCurrentLocation()
-        print 'current',cur
-        #if not already at central, get there
-        if central != cur:
-            self.goToNodeById(central)
-        thing = self.peek('object')
-        print 'object', thing
-        #if thing isn't empty
-        if thing != None:
-            this = self.pickUp('object')
-            print 'I have', this, '.  Awe-SOME!'
-            #NOTE: answer should be in the form of a node id or the sack functions
-            answer = raw_input('Where do you want me to put it? ')
-            print 'OK.  Going to:', answer
-            destination = self.goToNodeById(answer)
-            where = self.sensory_getCurrentLocation()
-            print 'I am here now.', where
-            self.putDownObject(this)
-            verify = self.peek('object')
-            print 'I put it here in ',where, verify
-
-        return
-
-    #*****************searchBW()***********************************
-    #Actions:  will move freely searching through BWn
-    #Returns:  list of collected objects
-    #**************************************************************
-    def searchBW(self, genSeed=0):
-        random.seed(genSeed)
-        #list for objects
-        objList =[]
-        #check if agent is at central node
-        #central = '1a2a3a'
-        cur = self.sensory_getCurrentLocation()
-        print 'current',cur
-        thing = self.peek('object')
-        print 'object', thing
-        #if thing isn't none
-        #while thing != None:
-            #put it in the list
-            #objList.append(thing)
-            #print 'list', objList
-            #keep looking for objects
-            #curCfg = createWorld_BW.reconstructCfg(cur)
-            #moves = createWorld_BW.genMvs(curCfg)
-            #print 'moves', moves
-            #get random index of move from list of moves
-            #rIndex= random.randrange(len(moves))
-            #print 'rIndex', rIndex
-            #nxtCfg = createWorld_BW.mkNwCfg(moves[rIndex],curCfg)
-            #print 'nxtCfg',nxtCfg
-            #nxt=self.goToNodeByConfig(nxtCfg)
-            #whr = self.sensory_getCurrentLocation()
-            #print whr
-        while thing == None:
-            #keep looking for objects
-            curCfg = createWorld_BW.reconstructCfg(cur)
-            moves = createWorld_BW.genMvs(curCfg)
-            print 'moves', moves
-            #get random index of move from list of moves
-            rIndex= random.randrange(len(moves))
-            print 'rIndex', rIndex
-            nxtCfg = createWorld_BW.mkNwCfg(moves[rIndex],curCfg)
-            print 'nxtCfg',nxtCfg
-            nxt=self.goToNodeByConfig(nxtCfg)
-            whr = self.sensory_getCurrentLocation()
-            print whr
-
         
-        return objList 
         
-
->>>>>>> 3cfc162332e14ff23593dc176000cf9190a236b4
