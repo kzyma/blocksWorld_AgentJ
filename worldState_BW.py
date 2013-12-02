@@ -22,12 +22,18 @@ from GUIApp import *
 
 graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
+#neo4j.authenticate("bw3.sb01.stations.graphenedb.com:24789",
+                  # "Bw3", "rPNUx8yavz6tFsY2sgUv")
+
+#graph_db = neo4j.GraphDatabaseService("http://bw3.sb01.stations.graphenedb.com:24789/db/data/")
+
 
 class worldStateMachine:
 
     #current world State data
     location = ''
     node = ''
+    centerNodeCfg = ''
 
     ################# value semantics  #######################
     #constuct worldStateMachine object with initial location = center node
@@ -36,11 +42,13 @@ class worldStateMachine:
         for record in query.stream():
             currentNode = record[0]
         self.node = currentNode
+        self.centerNodeCfg = (str(currentNode["id"]))
         self.setLocation(str(currentNode["id"]))
 
     #################  getLocation()  ########################
     #return the current state location
     def getLocation(self):
+        print 'Agent is at '+self.location
         return self.location
 
     #################  setLocation() #########################
@@ -79,6 +87,7 @@ class worldStateMachine:
         for record in query.stream():
             returnedNode = record[0]
         self.node = returnedNode
+        print str(value)+' added to blocks world'
 
 
     #################  deletePropertyFromLocation(prop)   ########
@@ -91,7 +100,8 @@ class worldStateMachine:
         for record in query.stream():
             currentNode = record[0]
         self.node = currentNode
-            
+
+        
 
     ##################  getValueOfPropertyAtLocation(prop)  ########
     # function returns value of property passed of current node
