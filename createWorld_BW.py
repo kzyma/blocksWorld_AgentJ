@@ -27,8 +27,8 @@ import random
 
 #graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
-neo4j.authenticate("bw3.sb01.stations.graphenedb.com:24789","Bw3", "rPNUx8yavz6tFsY2sgUv")
-graph_db = neo4j.GraphDatabaseService("http://bw3.sb01.stations.graphenedb.com:24789/db/data/")
+neo4j.authenticate("blocksworld5.sb01.stations.graphenedb.com:24789","blocksWorld5", "TZrxoHKHzmBVSwFoelLX")
+graph_db = neo4j.GraphDatabaseService("http://blocksworld5.sb01.stations.graphenedb.com:24789/db/data/")
 
 
 
