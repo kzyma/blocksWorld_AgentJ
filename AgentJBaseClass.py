@@ -30,13 +30,10 @@ import logging
 #uncomment for debug logging
 #logging.basicConfig(level=logging.DEBUG)
 
-#neo4j.authenticate("bw3.sb01.stations.graphenedb.com:24789",
-#                   "Bw3", "rPNUx8yavz6tFsY2sgUv")
+neo4j.authenticate("bw3.sb01.stations.graphenedb.com:24789","Bw3", "rPNUx8yavz6tFsY2sgUv")
+graph_db = neo4j.GraphDatabaseService("http://bw3.sb01.stations.graphenedb.com:24789/db/data/")
 
-#graph_db = neo4j.GraphDatabaseService("http://bw3.sb01.stations.graphenedb.com:24789/db/data/")
-
-
-graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+#graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
 
 class AgentJBase():
