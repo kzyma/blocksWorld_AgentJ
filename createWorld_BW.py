@@ -480,8 +480,3 @@ def generateBW(n):
         i= eval(str(nodesAndRelsN2J).strip('[]'))
         graph_db.create(*i)
 
-
-
-
-
->>>>>>> d9d0307acca9d18bcb4a78b1feb3eab0fe1266ee
