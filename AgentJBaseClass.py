@@ -59,11 +59,11 @@ class AgentJBase():
         
         #Translate the index that number is at
         #first build configuration from currentlocation ID
-        cfg= AgtJUtilityClass.reconstructCfg(self.state.getLocation())
+        cfg= reconstructCfg(self.state.getLocation())
         #then find index of that number to pass to move function
         
-        srt = AgtJUtilityClass.convertNtoStr(str(getIndx))
-        stp = AgtJUtilityClass.convertNtoStr(str(putIndx))
+        srt = convertNtoStr(str(getIndx))
+        stp = convertNtoStr(str(putIndx))
         mv="MOVE"+srt+"TO"+stp
         self.state.moveByRelation(mv)
 
@@ -72,8 +72,8 @@ class AgentJBase():
     # of those moves are made, calling makeMove(x,x)
     def goToNodeById(self,nodeID):
         
-        init= AgtJUtilityClass.reconstructCfg(self.state.getLocation())
-        goal= AgtJUtilityClass.reconstructCfg(nodeID)
+        init= reconstructCfg(self.state.getLocation())
+        goal= reconstructCfg(nodeID)
         #note--HEURISTIC_LIST is in file AStarHeuristics.py
         path = findPath(init,goal,HEURISTIC_LIST[2])
         path = path[1:-1]
@@ -82,8 +82,8 @@ class AgentJBase():
         for x in path:
             if x!= '':
                 a=x.split(",")
-                indxGet=AgtJUtilityClass.untranslateMv(a[0].strip(),AgtJUtilityClass.reconstructCfg(self.state.getLocation()))
-                indxSet=AgtJUtilityClass.untranslateMv(a[1].strip(),AgtJUtilityClass.reconstructCfg(self.state.getLocation()))
+                indxGet=untranslateMv(a[0].strip(),AgtJUtilityClass.reconstructCfg(self.state.getLocation()))
+                indxSet=untranslateMv(a[1].strip(),AgtJUtilityClass.reconstructCfg(self.state.getLocation()))
                 self.makeMove(indxGet,indxSet)
 
 
@@ -325,67 +325,67 @@ class AgentJBase():
 
 #################### Non-Member Functions ##################################
         
-    def convertNtoStr(self,n):
-            return {
-            '1': "one",
-            '2': "two",
-            '3': "three",
-            '4': "four",
-            '5': "five",
-            '6': "six",
-            '7': "seven",
-            '8': "eight",
-            '9': "nine",
-            '0': "zero",
-            '-1': "table",
-            }.get(n,"none") 
+def convertNtoStr(n):
+        return {
+        '1': "one",
+        '2': "two",
+        '3': "three",
+        '4': "four",
+        '5': "five",
+        '6': "six",
+        '7': "seven",
+        '8': "eight",
+        '9': "nine",
+        '0': "zero",
+        '-1': "table",
+        }.get(n,"none") 
 
-    #re-build the BW cfg from it's id
-    def reconstructCfg(self,nodeID):
-        cfg=[]
-        i=1
-        while i<len(nodeID):
-            current=nodeID[(i-1):i]
-            temp=[]
-            while current!='a':
-                if (current != '0'):
-                    temp.append(int(current))
-                i = i+1
-                current=nodeID[(i-1):i]
-            cfg.append(temp)
+#re-build the BW cfg from it's id
+def reconstructCfg(nodeID):
+    cfg=[]
+    i=1
+    while i<len(nodeID):
+        current=nodeID[(i-1):i]
+        temp=[]
+        while current!='a':
+            if (current != '0'):
+                temp.append(int(current))
             i = i+1
-        return cfg
+            current=nodeID[(i-1):i]
+        cfg.append(temp)
+        i = i+1
+    return cfg
 
-    def untranslateMv(self,a,node):
-        #take care of special case--table
-        if (a=="-1"):
-            return -1
-        #all other cases
-        for i in node:
-            if int(a) in i:
-                return node.index(i)
+def untranslateMv(a,node):
+    #take care of special case--table
+    if (a=="-1"):
+        return -1
+    #all other cases
+    for i in node:
+        if int(a) in i:
+            return node.index(i)
 
-    def numbize(self,nList):
-        num=0
-        for n in nList:
-                num*=100
-                num+=n
-        return num
+def numbize(nList):
+    num=0
+    for n in nList:
+            num*=100
+            num+=n
+    return num
 
-    def genCfgId(self,cfg):
-        nL=map(self.numbize,cfg)
-        nL.sort()
-        cfId=''
-        for n in nL:
-                cfId+=str(n)+'a'
-        return cfId
+def genCfgId(cfg):
+    nL=map(self.numbize,cfg)
+    nL.sort()
+    cfId=''
+    for n in nL:
+            cfId+=str(n)+'a'
+    return cfId
     
-    def generateCenterNode(n):
-        i=[]
-        for x in range(1,n+1):  
-            n = []
-            n.append(x)
-            i.append(n)
-        return i
+def generateCenterNode(n):
+    i=[]
+    for x in range(1,n+1):  
+        n = []
+        n.append(x)
+        i.append(n)
+    return i
         
         
