@@ -17,7 +17,6 @@ from py2neo import node, rel
 from py2neo import neo4j
 import time
 import random
-import AgtJUtilityClass
 import createWorld_BW
 from AStarFunctions import *
 from worldState_BW import *
