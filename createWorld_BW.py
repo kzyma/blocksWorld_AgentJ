@@ -10,7 +10,6 @@
 ##  and add them to neo4j data file.
 ###########################################################################
 
-
 from py2neo import node, rel
 from py2neo import neo4j
 import logging
@@ -25,12 +24,10 @@ import bisect
 import time
 import random
 
-graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+#graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
-#neo4j.authenticate("blocksworldv2.sb01.stations.graphenedb.com:24789",
-#                   "blocks_world_v2", "Ow5k0ESdykiT9vp05UXU")
-
-#graph_db = neo4j.GraphDatabaseService("http://blocksworldv2.sb01.stations.graphenedb.com:24789/db/data/")
+neo4j.authenticate("blocksworld5.sb01.stations.graphenedb.com:24789","blocksWorld5", "TZrxoHKHzmBVSwFoelLX")
+graph_db = neo4j.GraphDatabaseService("http://blocksworld5.sb01.stations.graphenedb.com:24789/db/data/")
 
 
 
