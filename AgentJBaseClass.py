@@ -82,8 +82,8 @@ class AgentJBase():
         for x in path:
             if x!= '':
                 a=x.split(",")
-                indxGet=untranslateMv(a[0].strip(),AgtJUtilityClass.reconstructCfg(self.state.getLocation()))
-                indxSet=untranslateMv(a[1].strip(),AgtJUtilityClass.reconstructCfg(self.state.getLocation()))
+                indxGet=untranslateMv(a[0].strip(),reconstructCfg(self.state.getLocation()))
+                indxSet=untranslateMv(a[1].strip(),reconstructCfg(self.state.getLocation()))
                 self.makeMove(indxGet,indxSet)
 
 
