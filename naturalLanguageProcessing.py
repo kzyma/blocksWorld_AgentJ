@@ -3,8 +3,8 @@
 ##Author: Ken Zyma
 ##Project: Blocks World and Agency
 ##
-##Dependencies: 
-##  nltk
+##Dependencies: nltk
+##
 ##This file processes input for use in the AgentJBase class.
 ##
 ###########################################################################
@@ -132,9 +132,4 @@ def convertSpeechToFunction(input):
             
         
     return outputList 
-
-##################### test convertSpeech #####################
-
-#i = "Tell me your current location and go to id []"
-#print convertSpeechToFunction(i)
 

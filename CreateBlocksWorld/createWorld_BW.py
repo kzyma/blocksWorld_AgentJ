@@ -1,14 +1,13 @@
-##########################################################################
+###########################################################################
 ##file: createWorld_BW.py
-##Author: Ken Zyma
-##Project: Blocks World and Agency
+##Author: Ken Zyma, Erin Fowler, Dr. Rieksts
+##      *code adapted from Dr. Rieksts "Blocks World" is notated by an (*)
 ##
 ##Dependencies: py2neo.py
-##              neo4j data stored locally at...(localhost:7474/db/data)
 ##
 ##This file contains all methods to create a blocksWorld(n) configuration
 ##  and add them to neo4j data file.
-###########################################################################
+############################################################################
 
 from py2neo import node, rel
 from py2neo import neo4j
@@ -24,15 +23,20 @@ import bisect
 import time
 import random
 
-#graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
+#the following should be un-commented when neo4j is running on your local machine, port 7474
+graph_db = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
 
-neo4j.authenticate("blocksworld5.sb01.stations.graphenedb.com:24789","blocksWorld5", "TZrxoHKHzmBVSwFoelLX")
-graph_db = neo4j.GraphDatabaseService("http://blocksworld5.sb01.stations.graphenedb.com:24789/db/data/")
+
+#next is provided a sample of how to run on a remote server (check out Graphene, which was
+#       suggested to us by Nigel Small, http://www.graphenedb.com/
+
+#neo4j.authenticate("address/of/remote/site")
+#graph_db = neo4j.GraphDatabaseService("address/of/remote/site")
 
 
 
 #generateRnadomConfig generates a random configuration
-#of the size of n and a set width.
+#of the size of n and a random width
 def generateRandomConfig(n):
         width = random.randint(1,2)
         l=range(1,n+1)
@@ -45,7 +49,7 @@ def generateRandomConfig(n):
         if [] in config:
                 config.remove([])
         return config
-
+#(*)
 def numbize(nList):
         num=0
         for n in nList:
@@ -53,6 +57,7 @@ def numbize(nList):
                 num+=n
         return num
 
+#(*)
 def genCfgId(cfg):
         nL=map(numbize,cfg)
         nL.sort()
@@ -61,16 +66,7 @@ def genCfgId(cfg):
                 cfId+=str(n)+'a'
         return cfId
 
-
-def destsOf(cfg):
-        rr=[x for x in range(len(cfg))]
-        mList=[]
-        for indx in range(len(cfg)):
-                irr = copy(rr)
-                irr[indx]=-1
-                mList.append(irr)
-        return mList
-
+#(*)
 def genMvs(cfg):
         src=[x for x in range(len(cfg))]
         dests=[]
@@ -83,7 +79,9 @@ def genMvs(cfg):
                 dests.append(idst)
         return [(src[a],dests[a][b]) for a in range(len(src)) for b in range(len(dests[a]))]
 
-#re-build the BW cfg from it's id
+#re-build the BW cfg from an id
+#this function is used mainly to ensure iniformity across generating configurations. For example...
+#  [[1,2],[3]]==[[3],[1,2]], so we do not want to store both!
 def reconstructCfg(nodeID):
         cfg=[]
         i=1
@@ -99,6 +97,7 @@ def reconstructCfg(nodeID):
             i = i+1
         return cfg
 
+#(*)
 def mkNwCfg(mv,cfg):
         newCfg=deepcopy(cfg)
         frm=mv[0]
@@ -112,15 +111,14 @@ def mkNwCfg(mv,cfg):
                 del newCfg[frm]
         return newCfg
 
-#cfg1 is configuration, mv is the move from "xpand'd node"
+#(*)
+# changes: added the re-formatting and node contents altered to fit this problem
 def makNd(cfg1,mv,root):
-        #first need to re-evaluate our cfg into common langauge
+        #first need to re-reformat the cfg into common format
         cfg_id = genCfgId(cfg1)
         cfg_formatted= reconstructCfg(cfg_id)
-        #print {'cfg':cfg1,'nid':cfg_id,'mv':mv,'root':root}
         return {'cfg':cfg_formatted,'nid':cfg_id,'mv':mv,'root':root}
-
-
+#(*)
 def xpdNd(node):
         cfg=node['cfg']
         mvs = genMvs(cfg)
@@ -144,6 +142,7 @@ def generateCenterNode(n):
 #*note* this is a workaround, neo4j does not allow any numbers
 #       as relation names
 def convertNtoStr(n):
+        n=str(n)
         return {
         '1': "one",
         '2': "two",
@@ -158,19 +157,16 @@ def convertNtoStr(n):
         '-1': "table",
         }.get(n,"none") 
 
+
 def findIndexById(nid,List):
         return List.index(nid)
         
-#Generate the Blocks World
-#*note* all checking of which blocks were already created,ect is done
-#       in python (client side) to avoid a bunch of unnessesary http reqs.
+#Generate the Blocks World on the location named at the top of of this document "graph_db=..."
 def generateBW(n):
         
         #list of New nodes that need to be expanded
         NeedToXpndList = []
         NeedToXpndListID = []
-        #list of nodes that were expanded
-        DoneXpndList = []
         #list of all nodes created and parrell indx'd node list for Neo2J
         nodesID = []
         nodesAndRelsN2J = []
@@ -190,7 +186,7 @@ def generateBW(n):
         #until all nodes that need to be expanded are expanded, continue...
         while([] != (NeedToXpndListID)):
                 
-                DoneXpndList.append(NeedToXpndListID.pop())
+                NeedToXpndListID.pop()
                 xpndNode = xpdNd(NeedToXpndList.pop())
                 
                 for x in xpndNode:
@@ -218,10 +214,6 @@ def generateBW(n):
                 indxOfCurrent = findIndexById(x["nid"],nodesID)
                 #append relation to nodesAndRels
                 relsN2J.append(rel(indxOfRoot,move,indxOfCurrent))
-                
-        #convert to string and remove first and last element (the " and ")
-        #-->>this is nessesary to do graph.db.create(nodesAndRelsN2J)
-        #str(nodesAndRelsN2J)[1:-1]
 
         nodesAndRelsN2J = nodesN2J + relsN2J
         args = str(nodesAndRelsN2J).strip('[]')
@@ -231,10 +223,8 @@ def generateBW(n):
                 if i not in tempRels:
                         tempRels.append(i)
                         
-        nodesAndRelsN2J = tempNodes + tempRels
-                
-        i= eval(str(nodesAndRelsN2J).strip('[]'))
+        nodesAndRelsN2J = tempNodes + tempRels            
+        i= nodesAndRelsN2J
+        #python has max length passed by parameter to a function, so a pointer is passed below 
         graph_db.create(*i)
-        
-        
-        
+              
