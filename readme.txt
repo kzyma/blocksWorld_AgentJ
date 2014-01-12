@@ -51,6 +51,6 @@ The variable graph_db at the top of both of these files must be changed to match
 
 Version 1 (december 2013):
 	*Problems with the constructor in AgentJBaseClass*
-	If you receive an error about any problems with the constructor in AgentJBase, it probobly has to do with indexing. The agent is defaulted to be placed into the world at index 1 (in our cases that was always the 'center node'. If for some reason this does not exists an exception will be raised. This may happen for the following reasons found thus far:
+	If you receive an error about any problems with the constructor in AgentJBase: The agent is defaulted to be placed into the world at index 1 (in our cases that was always the 'center node'. If for some reason this does not exists an exception will be raised. This may happen for the following reasons found thus far:
 	   You used cypher to clear a database. If you cleared all nodes and relationships using a cypher query, then when you go to create a new database the index will NOT start at 1. You must go into your neo4j folder, go to data, and delete the graph.db folder. 
 	
