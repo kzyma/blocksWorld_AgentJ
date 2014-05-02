@@ -18,7 +18,7 @@
 	Patrick Schemm (Kutztown University)
 	Nathan Trone (Kutztown University)
 
-	A special thanks also goes out to Dr. Riesks (Kutztown University). A lot of the fundamental code for this project (denoted by (*) throughout the source code) was either straight from or derived from his blocks world, used in CSC447: Artificial Intelligence 1.
+	A special thanks also goes out to Dr. Rieksts (Kutztown University). A lot of the fundamental code for this project (denoted by (*) throughout the source code) was either straight from or derived from his blocks world, used in CSC447: Artificial Intelligence 1.
 
 
 ################## Install: #######################
